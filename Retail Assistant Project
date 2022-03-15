@@ -1,0 +1,91 @@
+//  Retail_Assistant.cpp
+//  Retail Sales Assistant Program
+//  Programmer: Chase Thomas
+//  Date: 6/14/20 (Final Edits Made)
+//  Description:  This program calculates sales tax for a series of products.
+
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+int main()
+{
+	double cashDrawer = 500.00;
+	int productID = 0;
+	int quantity = 0;
+	double price = 0.0;
+	double subtotal = 0.0;
+	double salesTax = 0.0;
+	double totalSale = 0.0;
+	int anotherSale = 1;
+	double taxRate = 0.075;
+
+	while (anotherSale == 1)
+	{
+		cout << "enter the first ID:  ";
+		cin >> productID;
+		while (productID != -1) {
+			switch (productID)
+			{
+			case 101:
+				price = 65.00;
+				taxRate = 0.075;
+				break;
+			case 102:
+				price = 12.50;
+				taxRate = 0;
+				break;
+			case 103:
+				price = 24.50;
+				taxRate = 0;
+				break;
+			case 104:
+				price = 38.75;
+				taxRate = 0.075;
+				break;
+			case 105:
+				price = 17.80;
+				taxRate = 0.075;
+				break;
+			case 106:
+				price = 16.50;
+				taxRate = 0;
+				break;
+			case 107:
+				price = 42.85;
+				taxRate = 0.075;
+				break;
+			case 108:
+				price = 32.99;
+				taxRate = 0.075;
+				break;
+			case 109:
+				price = 28.75;
+				taxRate = 0.075;
+				break;
+			case 110:
+				price = 51.55;
+				taxRate = 0;
+				break;
+			default:
+				cout << "Something doesn't seem right...press any number and enter to skip quantity" << endl;
+			}
+			cout << "Enter quantity: ";
+			cin >> quantity;
+			subtotal = subtotal + (price * quantity);
+			salesTax = salesTax + (price * quantity * taxRate);
+			cout << "Enter the next ID:  ";
+			cin >> productID;
+		}
+		cout << "Reciept Time! (The Subtotal is...)" << subtotal << endl;
+		cout << "The Sales Tax is..." << salesTax << endl;
+		totalSale = subtotal + salesTax;
+		cout << "Your sales total is..." << totalSale;
+		cashDrawer = cashDrawer + totalSale;
+		cout << "Press 1 to continue OR 0 to end:  ";
+		cin >> anotherSale;
+		if (anotherSale == 0) {
+			cout << "The Cashdrawer total is equal to..." << cashDrawer << endl;
+		}
+	}
+	} 
