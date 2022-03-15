@@ -1,0 +1,555 @@
+#include "Header.h"
+#include <iostream>
+#include <string>
+#include <iomanip>
+using namespace std;
+/// <summary>
+/// This Program sets up a videogame code with the games name, high score, number of times played, and playtime (perosnal addittion) and then asks the user for each of these attributes. It then displays them in an ouput screen for the user to read.
+/// </summary>
+/// <returns></returns>
+
+// Setting up videogame class
+
+const int Date::days[] =
+ { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+ // Date constructor
+ Date::Date(int m, int d, int y)
+ {
+     setDate(m, d, y);
+  } // end Date constructor
+
+ // set month, day and year
+ void Date::setDate(int mm, int dd, int yy)
+ {
+     month = (mm >= 1 && mm <= 12) ? mm : 1;
+     year = (yy >= 1900 && yy <= 2100) ? yy : 1900;
+    
+         // test for a leap year
+         if (month == 2 && leapYear(year))
+         day = (dd >= 1 && dd <= 29) ? dd : 1;
+     else
+         day = (dd >= 1 && dd <= days[month]) ? dd : 1;
+     } // end function setDate
+
+ // overloaded prefix increment operator 
+ Date & Date::operator++()
+{
+     helpIncrement(); // increment date 
+     return *this; // reference return to create an lvalue
+    } // end function operator++ 
+
+ // overloaded postfix increment operator; note that the 
+ // dummy integer parameter does not have a parameter name
+ Date Date::operator++(int)
+ {
+      Date temp = *this; // hold current state of object 
+      helpIncrement();
+    
+         // return unincremented, saved, temporary object 
+         return temp; // value return; not a reference return 
+     } // end function operator++ 
+
+ // add specified number of days to date
+ const Date & Date::operator+=(int additionalDays)
+ {
+     for (int i = 0; i < additionalDays; i++)
+         helpIncrement();
+    
+        return *this; // enables cascading
+    } // end function operator+=
+
+ // if the year is a leap year, return true; otherwise, return false
+ bool Date::leapYear(int testYear) 
+ {
+    if (testYear % 400 == 0 ||
+        (testYear % 100 != 0 && testYear % 4 == 0))
+        return true; // a leap year
+     else
+        return false; // not a leap year
+     } // end function leapYear
+
+ // determine whether the day is the last day of the month
+ bool Date::endOfMonth(int testDay) const
+ {
+   if (month == 2 && leapYear(year))
+         return testDay == 29; // last day of Feb. in leap year
+     else
+        return testDay == days[month];
+     } // end function endOfMonth
+
+ // function to help increment the date
+ void Date::helpIncrement()
+ {
+   // day is not end of month
+        if (!endOfMonth(day))
+        day++; // increment day
+    else
+         if (month < 12) // day is end of month and month < 12
+         {
+        month++; // increment month
+         day = 1; // first day of new month
+         } // end if
+     else // last day of year
+         {
+         year++; // increment year
+         month = 1; // first month of new year
+         day = 1; // first day of new month
+         } // end else
+     } // end function helpIncrement
+
+ // overloaded output operator
+ ostream& operator<<(ostream& output, const Date& d)
+ {
+     static string monthName[13] = { "", "January", "February",
+      "March", "April", "May", "June", "July", "August",
+      "September", "October", "November", "December" };
+     output << monthName[d.month] << ' ' << d.day << ", " << d.year;
+     return output;
+ }
+class Game_Description
+{
+protected:
+    int year_made;
+    string manufacturer;
+    string game_type;
+public:
+    Game_Description() {
+     year_made = 0;
+     manufacturer = "NA";
+    string game_type = "NA";
+    }
+    Game_Description(int yearm, string manu, string type)
+    {
+        year_made = yearm; 
+        manufacturer = manu; 
+        game_type = type;
+    }
+    void setyear_made(int yearm) {
+        yearm = year_made;
+    }
+    void setmanufacturer(string manu) {
+        manu = manufacturer;
+    }
+    void setgame_type(string type) {
+        type = game_type;
+    }
+      int getyear_made() {
+        return year_made;
+      }
+      string getmanufacturer() {
+          return manufacturer;
+      }
+      string gettype() {
+          return game_type;
+      }
+
+      int Inputyear_made() {
+          int yearm;
+          cout << "What year was this game made? " << endl;
+          cin >> yearm;
+          while (score < 1980) {
+              cout << "Error: Please enter a year before 1980" << endl;
+              cout << "Re-Enter: ";
+              cin >> yearm;
+          }
+          return yearm;
+      }
+
+      string inputmanufacturer() {
+          string manu;
+          cout << "What is the manufacturer of the videogame you are playing? " << endl;
+          cin.ignore();
+          getline(cin, manu);
+          return manu;
+      }
+      string inputtype() {
+          string type;
+          cout << "What console does the videogame belong to? " << endl;
+          cin.ignore();
+          getline(cin, type);
+          return type;
+      }
+};
+
+class Game_Record  {
+protected:
+    // Private attributes of videogame class
+    string name;
+    int highScore;
+    int numOfPlays; // How many times is the game played
+    int playtime; //Added info because I like speedrunning videogames/ Time spent playing games in hours
+    Date Last_Playdate;
+    Game_Description game;
+public:
+    // Public methods for videogame
+    // Constructors set up
+    Game_Record() {
+        name = "NA";
+        highScore = 0;
+        numOfPlays = 0;
+        playtime = 0;
+
+    }
+    Game_Record(string gamename, int score, int num, int time) {
+        name = gamename;
+        highScore = score;
+        numOfPlays = num;
+        playtime = time;
+    }
+    Game_Record(const Game_Record& p2)
+    {
+        name = p2.name;
+        highScore = p2.highScore;
+        numOfPlays = p2.numOfPlays;
+        playtime = p2.playtime;
+    }
+    // Setting up set and get name functions
+    
+    void setname(string gamename) {
+        name = gamename;
+    }
+    void setHighScore(int score) {
+        highScore = score;
+    }
+    void setNumOfPlays(int num) {
+        numOfPlays = num;
+    }
+    void setplaytime(int time) {
+        playtime = time;
+    }
+
+    string getname() {
+        return name;
+    }
+    int getHighScore() {
+        return highScore;
+    }
+    int getNumOfPlays() {
+        return numOfPlays;
+    }
+    int getplaytime() {
+        return playtime;
+    }
+
+    string inputname() {
+        string gamename;
+        cout << "What video game are you currently playing? " << endl;
+        cin.ignore();
+        getline(cin, gamename);
+        return gamename;
+    }
+
+    int inputHighScore() {
+        int score;
+        cout << "What was your highscore? " << endl;
+        cin >> score;
+        while (score < 0) {
+            cout << "Error: Please enter positive values" << endl;
+            cout << "Re-Enter: ";
+            cin >> score;
+        }
+        return score;
+    }
+
+    int inputNumOfPlays() {
+        int num;
+        cout << "How many times did you play this game? " << endl;
+        cin >> num;
+        while (num < 0) {
+            cout << "Error: Please enter positive values" << endl;
+            cout << "Re-Enter: ";
+            cin >> num;
+        }
+        return num;
+    }
+    int inputplaytime() {
+        int time;
+        cout << "How much time (in hours) did you spend playing this game?" << endl;
+        cin >> time;
+        while (time < 0) {
+            cout << "Error: Please enter positive values" << endl;
+            cout << "Re-Enter: ";
+            cin >> time;
+        }
+
+        return time;
+    }
+    string changename() {
+        string gamename;
+        cout << "change to desired name" << endl;
+        cin.ignore();
+        getline(cin, gamename);
+        return gamename;
+    }
+    int changeHighScore() {
+        int score;
+        cout << "Change to desired HighScore" << endl;
+        cin >> score;
+        while (score < 0) {
+            cout << "Error: Please enter positive values" << endl;
+            cout << "Re-Enter: ";
+            cin >> score;
+        }
+        return score;
+    }
+    int changeNumOfPlays() {
+        int num;
+        cout << "Change to desired Number of Plays" << endl;
+        cin >> num;
+        while (num < 0) {
+            cout << "Error: Please enter positive values" << endl;
+            cout << "Re-Enter: ";
+            cin >> num;
+        }
+        return num;
+    }
+    int changeplaytime() {
+        int time;
+        cout << "change to desired time" << endl;
+        cin >> time;
+        while (time < 0) {
+            cout << "Error: Please enter positive values" << endl;
+            cout << "Re-Enter: ";
+            cin >> time;
+        }
+        return time;
+    }
+
+    // A function for output of information
+    void output(Game_Record game) {
+        // Format for said output
+        cout << game.getname() << endl << "Played " << game.getNumOfPlays() << " times (HIGH SCORE " << game.getHighScore() << ")" << endl << "Played for " << game.getplaytime() << " hours" << endl;
+    }
+};
+    // main routine for function
+    int guide() {
+        char choice;
+        int retchoice = 0;
+        // taking everything in as string and then error checking
+        do {
+            cout << "1: Enter a new game\n";
+            cout << "2: Update Times played or high score\n";
+            cout << "3: See all game stats\n";
+            cout << "4: Quit\n";
+            cout << "Please enter your choice as a number\n";
+            cin >> choice;
+            switch (choice) {
+            case '1':
+                retchoice = 1;
+                break;
+            case '2':
+                retchoice = 2;
+                break;
+            case '3':
+                retchoice = 3;
+                break;
+            case '4':
+                retchoice = 4;
+                break;
+            default:
+                cout << "The choice you entered is not valid, please re-enter!\n";
+                retchoice = 0;
+                break;
+            }
+
+        } while (retchoice != 1 && retchoice != 2 && retchoice != 3 && retchoice != 4);
+        return retchoice;
+    }
+    int choosegame() {
+        char choice;
+        int retchoice = -1;
+        while (retchoice < 0) {
+            cout << "Choose the game you want to edit" << endl;
+            cin >> choice;
+            switch (choice) {
+            case '1':
+                retchoice = 1;
+                break;
+            case '2':
+                retchoice = 2;
+                break;
+            case '3':
+                retchoice = 3;
+                break;
+            case '4':
+                retchoice = 4;
+                break;
+            case '5':
+                retchoice = 5;
+                break;
+            case '6':
+                retchoice = 6;
+                break;
+            case '7':
+                retchoice = 7;
+                break;
+            case '8':
+                retchoice = 8;
+                break;
+            case '9':
+                retchoice = 9;
+            case '10':
+                retchoice = 10;
+                break;
+            case '11':
+                retchoice = 11;
+            case '12':
+                retchoice = 12;
+            case '13':
+                retchoice = 13;
+            case '14':
+                retchoice = 14;
+                break;
+            case '15':
+                retchoice = 15;
+                break;
+            case '16':
+                retchoice = 16;
+                break;
+            case '17':
+                retchoice = 17;
+                break;
+            case '18':
+                retchoice = 18;
+                break;
+            case '19':
+                retchoice = 19;
+                break;
+            case '20':
+                retchoice = 20;
+                break;
+            default:
+                cout << "The choice you entered is not valid, please re-enter!\n";
+                retchoice = -1;
+                break;
+            }
+            return retchoice;
+        }
+    }
+
+
+
+    int main()
+    {
+        string name;
+        int highScore = 0;
+        int numOfPlays = 0;
+        int playtime = 0;
+        int choice = 0;
+        int count = 0;
+        int playdate = 0;
+        int year_made;
+        string manufacturer;
+        string game_type;
+
+        
+    const int gamesize = 20;
+    Game_Description games[gamesize];
+    Game_Record G[gamesize];
+    string selectgame[gamesize];
+    int currgame = 0;
+
+    while (choice != 4) {
+        choice = guide();
+        switch (choice) {
+        case 1:
+
+            if (count < gamesize) {
+                name = G[count].inputname();
+                highScore = G[count].inputHighScore();
+                numOfPlays = G[count].inputNumOfPlays();
+                playtime = G[count].inputplaytime();
+                year_made = games[count].Inputyear_made();
+                manufacturer = games[count].inputmanufacturer();
+                game_type = games[count].Inputyear_made();
+
+                G[currgame].setname(name);
+                G[currgame].setHighScore(highScore);
+                G[currgame].setNumOfPlays(numOfPlays);
+                G[currgame].setplaytime(playtime);
+                games[count].setyear_made(year_made);
+                games[count].setmanufacturer(manufacturer);
+                games[count].setgame_type(game_type);
+                cout << "Game " << count + 1 << " Has this description" << endl;
+                cout << "This is the name of the game that has been played: " << setw(3) << name << endl;
+                cout << "This is the highscore for the current game: " << setw(3) << highScore << endl;
+                cout << "This is the number of times the game has been played: " << setw(3) << numOfPlays << endl;
+                cout << "This is the time the game has been played: " << setw(3) << playtime << endl;
+                cout << "This is the year the game was made: " << setw(3) << year_made << endl;
+                cout << "This is the manufacturer of the game:" << setw(3) << manufacturer << endl;
+                cout << "This is the console the game belongs too: " << setw(3) << game_type << endl;
+                count++;
+            }
+            else
+            {
+                cout << "Maximum number of games reached"<<endl;
+            }
+            break;
+
+        case 2:
+
+            currgame = choosegame();
+            if (currgame >= 1 && currgame <= count) {
+                currgame -= 1;
+                name = G[currgame].changename();
+                highScore = G[currgame].changeHighScore();
+                numOfPlays = G[currgame].changeNumOfPlays();
+                playtime = G[currgame].changeplaytime();
+                year_made = games[currgame].Inputyear_made();
+                manufacturer = games[currgame].inputmanufacturer();
+                game_type = games[currgame].Inputyear_made();
+
+                G[currgame].setname(name);
+                G[currgame].setHighScore(highScore);
+                G[currgame].setNumOfPlays(numOfPlays);
+                G[currgame].setplaytime(playtime);
+                games[currgame].setyear_made(year_made);
+                games[currgame].setmanufacturer(manufacturer);
+                games[currgame].setgame_type(game_type);
+
+                cout << "You Changed " << currgame << " to:" << endl;
+                cout << "The new name is: " << setw(3) << name << endl;
+                cout << "The new highscore is: " << setw(3) << highScore << endl;
+                cout << "The new number of times the game has been played is: " << setw(3) << numOfPlays << endl;
+                cout << "The new time the game has been played is: " << setw(3) << playtime << endl;
+                cout << "This new year the game was made: " << setw(3) << year_made << endl;
+                cout << "This is the new manufacturer of the game:" << setw(3) << manufacturer << endl;
+                cout << "This is the new console the game belongs too: " << setw(3) << game_type << endl;
+            }
+            else
+            {
+                cout << "Invalid entry : Please try again"<<endl;
+            }
+
+            break;
+        case 3:
+            cout << "Select the game you want to see"<<endl;
+            cin >> currgame;
+            if (currgame >= 1 && currgame <= count) {
+                cout << "Game ouput for game: " << currgame << endl;
+                cout << "This is the name" << G[currgame - 1].getname() << endl;
+                cout << "This is the highscore: " << G[currgame - 1].getHighScore() << endl;
+                cout << "This is the number of times the game has been played:" << G[currgame - 1].getNumOfPlays() << endl;
+                cout << "This is the playtime: " << G[currgame - 1].getplaytime() << endl;
+                cout << "This is the year the game was made: " << games[currgame - 1].getyear_made() << endl;
+                cout << "This is the manufacturer of the game: " << games[currgame - 1].getmanufacturer() << endl;
+                cout << "This is the console the game belongs too: " << games[currgame - 1].gettype() << endl;
+                break;
+
+
+            }
+            else
+            {
+                cout << "Invalid entry : Please try again"<<endl;
+
+
+            }
+        }
+
+
+
+
+
+    }
+}
